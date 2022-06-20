@@ -1,0 +1,14 @@
+<p-toast position="bottom-left"></p-toast>
+<div class="container">
+  <div>
+    <button pButton type="button" label="Fill DB" class="mr-2" (click)="fillMyDatabase()"></button>
+    <button pButton type="button" label="Generate Report" (click)="openReport()"></button>
+  </div>
+  <h1>IMSE Inc.</h1>
+  <p-splitButton
+    label="DB"
+    icon="pi pi-database"
+    [model]="items"
+    (onClick)="unsetDb()"
+  ></p-splitButton>
+</div>

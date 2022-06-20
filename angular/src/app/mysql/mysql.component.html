@@ -1,0 +1,28 @@
+<p-toast position="bottom-left"></p-toast>
+
+<p-table [value]="interns">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+        Interns
+        <button pButton type="button" icon="pi pi-refresh" (click)="getMySqlInterns()" class="mb-2"></button>
+    </div>
+</ng-template>
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Employee Id</th>
+          <th>Employee Name</th>
+          <th>Employee Salary</th>
+          <th style="text-align: right">Promote</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-intern>
+      <tr>
+          <td>{{intern.employee_id}}</td>
+          <td>{{intern.employee_name}}</td>
+          <td>{{intern.salary}}</td>
+          <td style="text-align: right">
+            <button pButton type="button" class="p-button-secondary" icon="pi pi-arrow-up" (click)="promoteIntern(intern.employee_id)" style="background-color: rgb(230, 133, 16); border: rgb(170, 111, 0)"></button>
+        </td>
+      </tr>
+  </ng-template>
+</p-table>

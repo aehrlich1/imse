@@ -1,0 +1,9 @@
+<div class="container">
+  <app-header class="shadow-4" (databaseEvent)="setDatabase($event)"></app-header>
+  <app-mysql *ngIf="database == 'mysql'"></app-mysql>
+  <app-mongodb *ngIf="database == 'mongodb'"></app-mongodb>
+  <div class="database-icon">
+    <div class="mt-1">DB:</div>
+    <span style="font-size: 12px">{{database}}</span>
+  </div>
+</div>

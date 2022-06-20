@@ -1,0 +1,28 @@
+<p-toast position="bottom-left"></p-toast>
+
+<p-table [value]="intern">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+        Interns
+        <button pButton type="button" icon="pi pi-refresh" class="mb-2" (click)="getMongoDbInterns()"></button>
+    </div>
+</ng-template>
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Employee Id</th>
+          <th>Employee Name</th>
+          <th>Employee Salary</th>
+          <th style="text-align: right">Promote</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-intern>
+      <tr>
+          <td>{{intern.employee_id}}</td>
+          <td>{{intern.employee_name}}</td>
+          <td>{{intern.salary}}</td>
+          <td style="text-align: right">
+            <button pButton type="button" class="p-button-secondary" icon="pi pi-arrow-up" style="background-color: green" (click)="promoteMongoDbIntern(intern.employee_id)"></button>
+        </td>
+      </tr>
+  </ng-template>
+</p-table>

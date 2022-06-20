@@ -1,0 +1,23 @@
+<p-table [value]="report">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+        Report
+    </div>
+</ng-template>
+  <ng-template pTemplate="header">
+      <tr>
+          <th>tax_id</th>
+          <th>year</th>
+          <th>interns_hired</th>
+          <th>sofware engineers hired</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-report>
+      <tr>
+          <td>{{report.tax_id}}</td>
+          <td>{{report.year}}</td>
+          <td>{{report.interns_hired}}</td>
+          <td>{{report.software_engineers_hired}}</td>
+      </tr>
+  </ng-template>
+</p-table>
