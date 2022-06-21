@@ -11,7 +11,7 @@ http
     switch (req.url) {
         case "/test": {
             console.log("test url was called!");
-            (0, mysqlDatabaseService_1.createTestTable)();
+            (0, mongodbDatabaseService_1.migrateMongodbDatabase)();
             res.end();
             break;
         }
@@ -49,6 +49,11 @@ http
             }
             res.writeHead(200, { "Content-Type": "text/plain" });
             res.end();
+            break;
+        }
+        case "/mongodb/migrate": {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            (0, mongodbDatabaseService_1.migrateMongodbDatabase)().then(() => res.end());
             break;
         }
         case "/mongodb/interns": {

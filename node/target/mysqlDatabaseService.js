@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMySqlReport = exports.getDataInterns = exports.promoteIntern = exports.createMySqlDatabase = exports.createTestTable = void 0;
+exports.getMySqlReport = exports.getSoftwareEngineerOnEmployee = exports.getInternOnEmployee = exports.getDataInterns = exports.getCompanies = exports.promoteIntern = exports.createMySqlDatabase = exports.createTestTable = void 0;
 const mysql = require("mysql2");
 const mysqlDatabaseTables_1 = require("./mysqlDatabaseTables");
 const csvParser = require("csv-parser");
@@ -269,6 +269,7 @@ function getCompanies() {
         });
     });
 }
+exports.getCompanies = getCompanies;
 function getDataInterns() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("==========GETTING DATA INTERNS============");
@@ -285,6 +286,32 @@ function getDataInterns() {
     });
 }
 exports.getDataInterns = getDataInterns;
+function getInternOnEmployee() {
+    return new Promise((resolve) => {
+        mysqlDbConnection.query("SELECT * FROM intern LEFT JOIN employee ON intern.employee_id = employee.employee_id", (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+}
+exports.getInternOnEmployee = getInternOnEmployee;
+function getSoftwareEngineerOnEmployee() {
+    return new Promise((resolve) => {
+        mysqlDbConnection.query("SELECT * FROM software_engineer LEFT JOIN employee ON software_engineer.employee_id = employee.employee_id", (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+}
+exports.getSoftwareEngineerOnEmployee = getSoftwareEngineerOnEmployee;
 function getMySqlReport() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("==========GENERATING MYSQL REPORT============");

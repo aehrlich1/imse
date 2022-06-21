@@ -2,6 +2,7 @@ import * as mongodb from "mongodb";
 import { MongoClient } from "mongodb";
 import csvParser = require("csv-parser");
 import fs = require("fs");
+import { getCompanies, getInternOnEmployee, getSoftwareEngineerOnEmployee } from "./mysqlDatabaseService"
 import { getDateToday, getRandomBoolean, getRandomDate, getRandomSalary } from "./databaseHelper";
 
 const mongoUri: string =
@@ -11,16 +12,36 @@ client.connect();
 const mongodbClient: mongodb.Db = client.db("imse-database");
 
 export async function createMongodbDatabase(): Promise<void> {
-  const collections: mongodb.Collection<mongodb.Document>[] = await mongodbClient.collections();
-  await Promise.all(collections.map(async (collection) => {
-    await collection.drop();
-  }))
+  await clearDatabase();
 
   await mongodbClient.createCollection("company");
   await mongodbClient.createCollection("employee");
 
   insertCompanyData();
   insertEmployeesData();
+}
+
+export async function migrateMongodbDatabase(): Promise<void> {
+  await clearDatabase();
+
+  // migrate company collection
+  const companyCollection = mongodbClient.collection("company");
+  getCompanies().then(company => 
+    companyCollection.insertMany(company as Array<Object>)
+    );
+
+  // migrate interns
+  const employeeCollection = mongodbClient.collection("employee");
+  getInternOnEmployee().then(results => {
+    results.map(entry => entry.position = "intern");
+    employeeCollection.insertMany(results);
+  });
+
+  // migrate software_engineers
+  getSoftwareEngineerOnEmployee().then(results => {
+    results.map(entry => entry.position = "software_engineer");
+    employeeCollection.insertMany(results);
+  });
 }
 
 export async function getMongoDbInterns() {
@@ -85,16 +106,8 @@ export async function getMongoDbReport() {
     }, {
       '$set': {
         'employees.entry_date': {
-          '$dateFromString': {
-            'dateString': '$employees.entry_date'
-          }
-        }
-      }
-    }, {
-      '$set': {
-        'employees.entry_date': {
           '$dateToString': {
-            'date': '$employees.entry_date', 
+            'date': '$employees.date', 
             'format': '%Y'
           }
         }
@@ -148,7 +161,6 @@ export async function getMongoDbReport() {
   const cursor = companyCollection.aggregate(pipeline);
   const report = []
   for await (const doc of cursor) {
-    console.log(doc);
     report.push(doc)
   }
 
@@ -242,4 +254,11 @@ async function insertEmployeesData() {
   // Create Indexes
   employeeCollection.createIndex( {employee_id: 1}, {unique: true} );
   employeeCollection.createIndex( {position: "text"} );
+}
+
+async function clearDatabase(): Promise<void> {
+  const collections: mongodb.Collection<mongodb.Document>[] = await mongodbClient.collections();
+  await Promise.all(collections.map(async (collection) => {
+    await collection.drop();
+  }))
 }

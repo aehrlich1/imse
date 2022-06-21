@@ -16,10 +16,11 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMongoDbReport = exports.promoteMongoDbIntern = exports.getMongoDbInterns = exports.createMongodbDatabase = void 0;
+exports.getMongoDbReport = exports.promoteMongoDbIntern = exports.getMongoDbInterns = exports.migrateMongodbDatabase = exports.createMongodbDatabase = void 0;
 const mongodb_1 = require("mongodb");
 const csvParser = require("csv-parser");
 const fs = require("fs");
+const mysqlDatabaseService_1 = require("./mysqlDatabaseService");
 const databaseHelper_1 = require("./databaseHelper");
 const mongoUri = "mongodb://mongoadmin:secret@mongodb:27017/?authMechanism=DEFAULT&tls=false";
 const client = new mongodb_1.MongoClient(mongoUri);
@@ -27,10 +28,7 @@ client.connect();
 const mongodbClient = client.db("imse-database");
 function createMongodbDatabase() {
     return __awaiter(this, void 0, void 0, function* () {
-        const collections = yield mongodbClient.collections();
-        yield Promise.all(collections.map((collection) => __awaiter(this, void 0, void 0, function* () {
-            yield collection.drop();
-        })));
+        yield clearDatabase();
         yield mongodbClient.createCollection("company");
         yield mongodbClient.createCollection("employee");
         insertCompanyData();
@@ -38,6 +36,26 @@ function createMongodbDatabase() {
     });
 }
 exports.createMongodbDatabase = createMongodbDatabase;
+function migrateMongodbDatabase() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield clearDatabase();
+        // migrate company collection
+        const companyCollection = mongodbClient.collection("company");
+        (0, mysqlDatabaseService_1.getCompanies)().then(company => companyCollection.insertMany(company));
+        // migrate interns
+        const employeeCollection = mongodbClient.collection("employee");
+        (0, mysqlDatabaseService_1.getInternOnEmployee)().then(results => {
+            results.map(entry => entry.position = "intern");
+            employeeCollection.insertMany(results);
+        });
+        // migrate software_engineers
+        (0, mysqlDatabaseService_1.getSoftwareEngineerOnEmployee)().then(results => {
+            results.map(entry => entry.position = "software_engineer");
+            employeeCollection.insertMany(results);
+        });
+    });
+}
+exports.migrateMongodbDatabase = migrateMongodbDatabase;
 function getMongoDbInterns() {
     return __awaiter(this, void 0, void 0, function* () {
         const employee = [];
@@ -104,16 +122,8 @@ function getMongoDbReport() {
             }, {
                 '$set': {
                     'employees.entry_date': {
-                        '$dateFromString': {
-                            'dateString': '$employees.entry_date'
-                        }
-                    }
-                }
-            }, {
-                '$set': {
-                    'employees.entry_date': {
                         '$dateToString': {
-                            'date': '$employees.entry_date',
+                            'date': '$employees.date',
                             'format': '%Y'
                         }
                     }
@@ -168,7 +178,6 @@ function getMongoDbReport() {
         try {
             for (var cursor_1 = __asyncValues(cursor), cursor_1_1; cursor_1_1 = yield cursor_1.next(), !cursor_1_1.done;) {
                 const doc = cursor_1_1.value;
-                console.log(doc);
                 report.push(doc);
             }
         }
@@ -263,5 +272,13 @@ function insertEmployeesData() {
         // Create Indexes
         employeeCollection.createIndex({ employee_id: 1 }, { unique: true });
         employeeCollection.createIndex({ position: "text" });
+    });
+}
+function clearDatabase() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const collections = yield mongodbClient.collections();
+        yield Promise.all(collections.map((collection) => __awaiter(this, void 0, void 0, function* () {
+            yield collection.drop();
+        })));
     });
 }

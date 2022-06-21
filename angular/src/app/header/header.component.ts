@@ -59,6 +59,10 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  migrateMyDatabase(): void {
+    this.databaseService.migrateMySqlDatabase();
+  }
+
   openReport(): void {
     switch(this.database) {
       case "mysql": {

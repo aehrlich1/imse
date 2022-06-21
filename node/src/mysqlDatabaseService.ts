@@ -277,7 +277,7 @@ export function promoteIntern(employee_id: number) {
   })
 }
 
-function getCompanies() {
+export function getCompanies() {
   return new Promise((resolve) => {
     mysqlDbConnection.query("SELECT tax_id FROM company", (err, results) => {
       if (err) {
@@ -293,6 +293,30 @@ export async function getDataInterns(): Promise<mysql.RowDataPacket[]> {
   console.log("==========GETTING DATA INTERNS============");
   return new Promise((resolve) => {
     mysqlDbConnection.query("SELECT * FROM employee NATURAL JOIN intern", (err, results: mysql.RowDataPacket[]) => {
+      if (err) {
+        throw err;
+      } else {
+        resolve(results)
+      }
+    })
+  });
+}
+
+export function getInternOnEmployee(): Promise<mysql.RowDataPacket[]> {
+  return new Promise((resolve) => {
+    mysqlDbConnection.query("SELECT * FROM intern LEFT JOIN employee ON intern.employee_id = employee.employee_id", (err, results: mysql.RowDataPacket[]) => {
+      if (err) {
+        throw err;
+      } else {
+        resolve(results)
+      }
+    })
+  });
+}
+
+export function getSoftwareEngineerOnEmployee(): Promise<mysql.RowDataPacket[]> {
+  return new Promise((resolve) => {
+    mysqlDbConnection.query("SELECT * FROM software_engineer LEFT JOIN employee ON software_engineer.employee_id = employee.employee_id", (err, results: mysql.RowDataPacket[]) => {
       if (err) {
         throw err;
       } else {

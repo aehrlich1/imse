@@ -30,6 +30,10 @@ export class DatabaseService {
     this.http.post("http://localhost:3000/mongodb", { }).subscribe();
   }
 
+  migrateMySqlDatabase(): void {
+    this.http.get("http://localhost:3000/mongodb/migrate").subscribe();
+  }
+
   getMongoDbInterns(): Observable<any> {
     return this.http.get("http://localhost:3000/mongodb/interns");
   }
