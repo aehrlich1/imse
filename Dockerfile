@@ -13,8 +13,6 @@ FROM nginx
 
 COPY --from=build /app/dist/app /usr/share/nginx/html
 
-COPY ["./angular/dist/app", "/usr/share/nginx/html"]
-
 COPY ["./nginx/nginx.conf", "/etc/nginx/nginx.conf"]
 
 COPY ["./nginx/certs", "/etc/ssl/private"]
