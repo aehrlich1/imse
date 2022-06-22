@@ -29,18 +29,3 @@ See [digitalocean](https://www.digitalocean.com/community/tutorials/how-to-creat
 ## MYSQL
 
 See [FULL OUTER JOIN](https://explainextended.com/2009/04/06/emulating-full-outer-join-in-mysql/).
-
----
-## TODO
-
-- [X] mongodb indexes
-- [X] remove exposed port from db images (They are open for now so that I can connect via OracleSQL Developer).
-- [X] create the "docker-compose.production.yml' file for deployment
-- [X] deploy the angular app to the nginx server
-- [ ] remove exposed port from the imse-test-1-app (node)
-- [ ] check the cross-origin issue thing
-
-## Maybe
-
-- Fix data migration
-- complete report
