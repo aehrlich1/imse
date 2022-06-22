@@ -12,8 +12,8 @@ services:
 
   angular:
     build: ./angular
-    command: npm start
     working_dir: /app
+    command: npm start
     volumes:
       - ./angular:/app
     ports:
@@ -27,6 +27,9 @@ services:
       - 3000:3000
       - 9229:9229
     working_dir: /app
+    depends_on:
+      - mysql
+      - mongodb
     volumes:
       - ./node/target:/app/target
     environment:

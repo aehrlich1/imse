@@ -16,11 +16,12 @@ http
         break;
       }
       case "/mysql": {
-        if (req.method == "POST") {
-          createMySqlDatabase();
-        }
         res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end();
+        if (req.method == "POST") {
+          createMySqlDatabase().then(() => res.end());
+        } else {
+          res.end();
+        }
         break;
       }
       case "/mysql/interns": {

@@ -182,7 +182,7 @@ function insertManagerData() {
     return __awaiter(this, void 0, void 0, function* () {
         mysqlDbConnection.query("SELECT employee_id FROM employee WHERE employee_id < 50", (err, results) => {
             if (err) {
-                throw err;
+                console.error(err);
             }
             else {
                 console.log("Query successfully executed.");
@@ -241,7 +241,7 @@ function insertInternData() {
 function promoteIntern(employee_id) {
     mysqlDbConnection.query("DELETE FROM intern WHERE employee_id = ?", [employee_id], (err, results) => {
         if (err) {
-            throw err;
+            console.error(err);
         }
         else {
             console.log(results);
@@ -249,7 +249,7 @@ function promoteIntern(employee_id) {
     });
     mysqlDbConnection.query("INSERT INTO software_engineer (employee_id, date, was_promoted) VALUES (?, ?, true)", [employee_id, getDateToday()], (err, results) => {
         if (err) {
-            throw err;
+            console.error(err);
         }
         else {
             console.log(results);
@@ -261,7 +261,7 @@ function getCompanies() {
     return new Promise((resolve) => {
         mysqlDbConnection.query("SELECT tax_id FROM company", (err, results) => {
             if (err) {
-                console.log(err);
+                console.error(err);
             }
             else {
                 resolve(results);
@@ -276,7 +276,7 @@ function getDataInterns() {
         return new Promise((resolve) => {
             mysqlDbConnection.query("SELECT * FROM employee NATURAL JOIN intern", (err, results) => {
                 if (err) {
-                    throw err;
+                    console.error(err);
                 }
                 else {
                     resolve(results);
@@ -290,7 +290,7 @@ function getInternOnEmployee() {
     return new Promise((resolve) => {
         mysqlDbConnection.query("SELECT * FROM intern LEFT JOIN employee ON intern.employee_id = employee.employee_id", (err, results) => {
             if (err) {
-                throw err;
+                console.error(err);
             }
             else {
                 resolve(results);
@@ -303,7 +303,7 @@ function getSoftwareEngineerOnEmployee() {
     return new Promise((resolve) => {
         mysqlDbConnection.query("SELECT * FROM software_engineer LEFT JOIN employee ON software_engineer.employee_id = employee.employee_id", (err, results) => {
             if (err) {
-                throw err;
+                console.error(err);
             }
             else {
                 resolve(results);
@@ -339,7 +339,7 @@ function getMySqlReport() {
         return new Promise((resolve) => {
             mysqlDbConnection.query(mySqlQuery, (err, results) => {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                 }
                 else {
                     resolve(results);

@@ -47,7 +47,9 @@ export class HeaderComponent implements OnInit {
   fillMyDatabase(): void {
     switch(this.database) {
       case "mysql": {
-        this.databaseService.fillMySqlDatabase();
+        this.databaseService.fillMySqlDatabase().subscribe(() => {
+          this.messageService.add({severity:'success', summary:'Database Service Message', detail:'MySQL database filled sucessfully'});
+        });
         break;
       }
       case "mongodb": {
@@ -60,7 +62,9 @@ export class HeaderComponent implements OnInit {
   }
 
   migrateMyDatabase(): void {
-    this.databaseService.migrateMySqlDatabase();
+    this.databaseService.migrateMySqlDatabase().subscribe(() => {
+      this.messageService.add({severity:'success', summary:'Database Service Message', detail:'MySQL database migrated sucessfully'});      
+    });
   }
 
   openReport(): void {

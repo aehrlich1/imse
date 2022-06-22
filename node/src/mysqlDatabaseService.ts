@@ -200,7 +200,7 @@ async function insertSoftwareEngineerData() {
 async function insertManagerData() {
   mysqlDbConnection.query("SELECT employee_id FROM employee WHERE employee_id < 50", (err, results: mysql.RowDataPacket[]) => {
     if (err) {
-      throw err;
+      console.error (err);
     } else {
       console.log("Query successfully executed.");
 
@@ -262,7 +262,7 @@ async function insertInternData() {
 export function promoteIntern(employee_id: number) {
   mysqlDbConnection.query("DELETE FROM intern WHERE employee_id = ?", [employee_id], (err, results) => {
     if (err) {
-      throw err;
+      console.error (err);
     } else {
       console.log(results)
     }
@@ -270,7 +270,7 @@ export function promoteIntern(employee_id: number) {
 
   mysqlDbConnection.query("INSERT INTO software_engineer (employee_id, date, was_promoted) VALUES (?, ?, true)", [employee_id, getDateToday()], (err, results) => {
     if (err) {
-      throw err;
+      console.error (err);
     } else {
       console.log(results)
     }
@@ -281,12 +281,12 @@ export function getCompanies() {
   return new Promise((resolve) => {
     mysqlDbConnection.query("SELECT tax_id FROM company", (err, results) => {
       if (err) {
-        console.log(err);
+        console.error (err);
       } else {
         resolve(results)
       }
     })
-  })
+  });
 }
 
 export async function getDataInterns(): Promise<mysql.RowDataPacket[]> {
@@ -294,7 +294,7 @@ export async function getDataInterns(): Promise<mysql.RowDataPacket[]> {
   return new Promise((resolve) => {
     mysqlDbConnection.query("SELECT * FROM employee NATURAL JOIN intern", (err, results: mysql.RowDataPacket[]) => {
       if (err) {
-        throw err;
+        console.error (err);
       } else {
         resolve(results)
       }
@@ -306,7 +306,7 @@ export function getInternOnEmployee(): Promise<mysql.RowDataPacket[]> {
   return new Promise((resolve) => {
     mysqlDbConnection.query("SELECT * FROM intern LEFT JOIN employee ON intern.employee_id = employee.employee_id", (err, results: mysql.RowDataPacket[]) => {
       if (err) {
-        throw err;
+        console.error (err);
       } else {
         resolve(results)
       }
@@ -318,7 +318,7 @@ export function getSoftwareEngineerOnEmployee(): Promise<mysql.RowDataPacket[]> 
   return new Promise((resolve) => {
     mysqlDbConnection.query("SELECT * FROM software_engineer LEFT JOIN employee ON software_engineer.employee_id = employee.employee_id", (err, results: mysql.RowDataPacket[]) => {
       if (err) {
-        throw err;
+        console.error (err);
       } else {
         resolve(results)
       }
@@ -354,7 +354,7 @@ export async function getMySqlReport() {
   return new Promise((resolve) => {
     mysqlDbConnection.query(mySqlQuery, (err, results) => {
       if (err) {
-        console.log(err);
+        console.error (err);
       } else {
         resolve(results)
       }

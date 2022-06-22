@@ -22,16 +22,16 @@ export class DatabaseService {
     return this.http.post("http://localhost:3000/mysql/promoteintern", {"employee_id": employee_id});
   }
 
-  fillMySqlDatabase(): void {
-    this.http.post("http://localhost:3000/mysql", { }).subscribe();
+  fillMySqlDatabase(): Observable<any> {
+    return this.http.post("http://localhost:3000/mysql", { });
   }
 
   fillMongoDbDatabase(): void {
     this.http.post("http://localhost:3000/mongodb", { }).subscribe();
   }
 
-  migrateMySqlDatabase(): void {
-    this.http.get("http://localhost:3000/mongodb/migrate").subscribe();
+  migrateMySqlDatabase(): Observable<any> {
+    return this.http.get("http://localhost:3000/mongodb/migrate");
   }
 
   getMongoDbInterns(): Observable<any> {
